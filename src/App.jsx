@@ -3,6 +3,7 @@ import "./App.css";
 
 const jobs = [
   {
+    id: 1,
     company: "Layers",
     initials: "L",
     role: "Frontend Developer",
@@ -13,6 +14,7 @@ const jobs = [
     tags: ["React", "TypeScript", "CSS"],
   },
   {
+    id: 2,
     company: "Vertex AI",
     initials: "V",
     role: "Backend Engineer",
@@ -23,6 +25,7 @@ const jobs = [
     tags: ["Node.js", "Python", "PostgreSQL"],
   },
   {
+    id: 3,
     company: "Orbit Labs",
     initials: "O",
     role: "Full Stack Developer",
@@ -37,7 +40,7 @@ const jobs = [
 function App() {
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
-
+  const [selectedJob, setSelectedJob] = useState(null);
   // Filter jobs by title, company, location, type, and skills.
   // Every word in the search must match somewhere in the job details.
   const filteredJobs = jobs.filter((job) => {
@@ -315,7 +318,11 @@ function App() {
           <div className="job-grid">
             {filteredJobs.length > 0 ? (
               filteredJobs.map((job) => (
-                <article className="job-card" key={job.company}>
+                <article
+                  className="job-card"
+                  key={job.id}
+                  onClick={() => setSelectedJob(job)}
+                >
                   <div className="job-card-top">
                     <div className={`company-logo ${job.color}`}>
                       {job.initials}
@@ -342,11 +349,10 @@ function App() {
                     <button
                       className="apply-button"
                       aria-label={`View ${job.role} at ${job.company}`}
-                      onClick={() =>
-                        setMessage(
-                          `${job.role} at ${job.company} is a sample listing. Real applications are coming soon!`,
-                        )
-                      }
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setSelectedJob(job);
+                      }}
                     >
                       ↗
                     </button>
@@ -365,6 +371,54 @@ function App() {
             vacancies.
           </p>
         </section>
+        {selectedJob && (
+          <section className="job-details" aria-live="polite">
+            <button
+              className="apply-button"
+              onClick={() => setSelectedJob(null)}
+            >
+              Close ✕
+            </button>
+
+            <span className="section-kicker">JOB DETAILS</span>
+
+            <h2>{selectedJob.role}</h2>
+
+            <p className="company-name">
+              {selectedJob.company} · {selectedJob.location}
+            </p>
+
+            <div className="job-tags">
+              {selectedJob.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+
+            <p>
+              <strong>Employment type:</strong> {selectedJob.type}
+            </p>
+
+            <p>
+              <strong>Salary:</strong> {selectedJob.salary}
+            </p>
+
+            <p>
+              This is a demo job listing for DevHire. More information about the
+              role and its requirements will be added later.
+            </p>
+
+            <button
+              className="apply-button"
+              onClick={() =>
+                setMessage(
+                  "Applications are coming soon! This is a demo listing.",
+                )
+              }
+            >
+              Apply soon ↗
+            </button>
+          </section>
+        )}
 
         <section className="how-section" id="how-it-works">
           <span className="section-kicker">SIMPLE BY DESIGN</span>

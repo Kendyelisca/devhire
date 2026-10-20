@@ -931,3 +931,50 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Job Details Panel */
+.job-details {
+  margin-top: 32px;
+  padding: 28px;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 18px;
+  background: rgba(20, 24, 45, 0.8);
+  scroll-margin-top: 24px;
+  animation: details-appear 0.25s ease-out;
+}
+
+.job-details h2 {
+  margin: 16px 0 8px;
+}
+
+.job-details > p {
+  margin-top: 16px;
+  line-height: 1.7;
+  color: #cbd5e1;
+}
+
+.job-details .job-tags {
+  margin: 20px 0;
+}
+
+.job-details .apply-button {
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.job-details > button:first-child {
+  float: right;
+  margin-top: 0;
+}
+
+@keyframes details-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
