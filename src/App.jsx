@@ -1,58 +1,14 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import "./App.css";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import JobDetailsPage from "./pages/JobDetailsPage";
+import jobs from "./data/jobs";
 
-const jobs = [
-  {
-    id: 1,
-    company: "Layers",
-    initials: "L",
-    role: "Frontend Developer",
-    type: "Full-time",
-    location: "Remote",
-    salary: "$3k–$5k / month",
-    color: "purple",
-    tags: ["React", "TypeScript", "CSS"],
-  },
-  {
-    id: 2,
-    company: "Vertex AI",
-    initials: "V",
-    role: "Backend Engineer",
-    type: "Full-time",
-    location: "Remote",
-    salary: "$4k–$7k / month",
-    color: "green",
-    tags: ["Node.js", "Python", "PostgreSQL"],
-  },
-  {
-    id: 3,
-    company: "Orbit Labs",
-    initials: "O",
-    role: "Full Stack Developer",
-    type: "Contract",
-    location: "Hybrid",
-    salary: "$3k–$6k / month",
-    color: "orange",
-    tags: ["React", "Node.js", "AWS"],
-  },
-];
-
-function App() {
+function HomePage() {
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
-  const [selectedJob, setSelectedJob] = useState(null);
-  const detailsRef = useRef(null);
+  const navigate = useNavigate();
 
-  function openJobDetails(job) {
-    setSelectedJob(job);
-
-    setTimeout(() => {
-      detailsRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }, 100);
-  }
   // Filter jobs by title, company, location, type, and skills.
   // Every word in the search must match somewhere in the job details.
   const filteredJobs = jobs.filter((job) => {
@@ -333,7 +289,7 @@ function App() {
                 <article
                   className="job-card"
                   key={job.id}
-                  onClick={() => setSelectedJob(job)}
+                  onClick={() => navigate(`/jobs/${job.id}`)}
                 >
                   <div className="job-card-top">
                     <div className={`company-logo ${job.color}`}>
@@ -363,7 +319,7 @@ function App() {
                       aria-label={`View ${job.role} at ${job.company}`}
                       onClick={(event) => {
                         event.stopPropagation();
-                        openJobDetails(job);
+                        navigate(`/jobs/${job.id}`);
                       }}
                     >
                       ↗
@@ -383,54 +339,6 @@ function App() {
             vacancies.
           </p>
         </section>
-        {selectedJob && (
-          <section className="job-details" aria-live="polite" ref={detailsRef}>
-            <button
-              className="apply-button"
-              onClick={() => openJobDetails(null)}
-            >
-              Close ✕
-            </button>
-
-            <span className="section-kicker">JOB DETAILS</span>
-
-            <h2>{selectedJob.role}</h2>
-
-            <p className="company-name">
-              {selectedJob.company} · {selectedJob.location}
-            </p>
-
-            <div className="job-tags">
-              {selectedJob.tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-
-            <p>
-              <strong>Employment type:</strong> {selectedJob.type}
-            </p>
-
-            <p>
-              <strong>Salary:</strong> {selectedJob.salary}
-            </p>
-
-            <p>
-              This is a demo job listing for DevHire. More information about the
-              role and its requirements will be added later.
-            </p>
-
-            <button
-              className="apply-button"
-              onClick={() =>
-                setMessage(
-                  "Applications are coming soon! This is a demo listing.",
-                )
-              }
-            >
-              Apply soon ↗
-            </button>
-          </section>
-        )}
 
         <section className="how-section" id="how-it-works">
           <span className="section-kicker">SIMPLE BY DESIGN</span>
@@ -479,6 +387,18 @@ function App() {
         <span>© 2026 DevHire · Project in development</span>
       </footer>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/jobs/:id" element={<JobDetailsPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
