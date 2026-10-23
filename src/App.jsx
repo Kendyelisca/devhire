@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 
 const jobs = [
@@ -41,6 +41,18 @@ function App() {
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
+  const detailsRef = useRef(null);
+
+  function openJobDetails(job) {
+    setSelectedJob(job);
+
+    setTimeout(() => {
+      detailsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }, 100);
+  }
   // Filter jobs by title, company, location, type, and skills.
   // Every word in the search must match somewhere in the job details.
   const filteredJobs = jobs.filter((job) => {
@@ -351,7 +363,7 @@ function App() {
                       aria-label={`View ${job.role} at ${job.company}`}
                       onClick={(event) => {
                         event.stopPropagation();
-                        setSelectedJob(job);
+                        openJobDetails(job);
                       }}
                     >
                       ↗
@@ -372,10 +384,10 @@ function App() {
           </p>
         </section>
         {selectedJob && (
-          <section className="job-details" aria-live="polite">
+          <section className="job-details" aria-live="polite" ref={detailsRef}>
             <button
               className="apply-button"
-              onClick={() => setSelectedJob(null)}
+              onClick={() => openJobDetails(null)}
             >
               Close ✕
             </button>
