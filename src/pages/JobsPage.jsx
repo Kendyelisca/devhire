@@ -6,6 +6,7 @@ import jobs from "../data/jobs";
 function JobsPage() {
   const [query, setQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
+  const [selectedEmployment, setSelectedEmployment] = useState("All");
   const navigate = useNavigate();
 
   const filteredJobs = jobs.filter((job) => {
@@ -29,7 +30,11 @@ function JobsPage() {
       selectedType === "All" ||
       job.location.toLowerCase().includes(selectedType.toLowerCase());
 
-    return matchesSearch && matchesType;
+    const matchesEmployment =
+      selectedEmployment === "All" ||
+      job.type.toLowerCase() === selectedEmployment.toLowerCase();
+
+    return matchesSearch && matchesType && matchesEmployment;
   });
 
   return (
@@ -106,6 +111,25 @@ function JobsPage() {
                 }`}
                 aria-pressed={selectedType === type}
                 onClick={() => setSelectedType(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+
+          <div
+            className="job-filters"
+            aria-label="Filter jobs by employment type"
+          >
+            {["All", "Full-time", "Contract"].map((type) => (
+              <button
+                key={type}
+                type="button"
+                className={`filter-button ${
+                  selectedEmployment === type ? "active" : ""
+                }`}
+                aria-pressed={selectedEmployment === type}
+                onClick={() => setSelectedEmployment(type)}
               >
                 {type}
               </button>
