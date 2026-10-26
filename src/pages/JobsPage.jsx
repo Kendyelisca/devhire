@@ -7,6 +7,7 @@ function JobsPage() {
   const [query, setQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedEmployment, setSelectedEmployment] = useState("All");
+  const [sortBy, setSortBy] = useState("recommended");
   const navigate = useNavigate();
 
   const filteredJobs = jobs.filter((job) => {
@@ -35,6 +36,24 @@ function JobsPage() {
       job.type.toLowerCase() === selectedEmployment.toLowerCase();
 
     return matchesSearch && matchesType && matchesEmployment;
+  });
+
+  const sortedJobs = [...filteredJobs].sort((a, b) => {
+    if (sortBy === "salary-high") {
+      const salaryA = Number(a.salary.match(/\d+(?:\.\d+)?/)?.[0] ?? 0);
+      const salaryB = Number(b.salary.match(/\d+(?:\.\d+)?/)?.[0] ?? 0);
+
+      return salaryB - salaryA;
+    }
+
+    if (sortBy === "salary-low") {
+      const salaryA = Number(a.salary.match(/\d+(?:\.\d+)?/)?.[0] ?? 0);
+      const salaryB = Number(b.salary.match(/\d+(?:\.\d+)?/)?.[0] ?? 0);
+
+      return salaryA - salaryB;
+    }
+
+    return 0;
   });
 
   return (
@@ -136,14 +155,28 @@ function JobsPage() {
             ))}
           </div>
 
+          <div className="sort-control">
+            <label htmlFor="sortBy">Sort by:</label>
+
+            <select
+              id="sortBy"
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+            >
+              <option value="recommended">Recommended</option>
+              <option value="salary-high">Salary: highest to lowest</option>
+              <option value="salary-low">Salary: lowest to highest</option>
+            </select>
+          </div>
+
           <p className="search-summary" aria-live="polite">
-            {filteredJobs.length}{" "}
-            {filteredJobs.length === 1 ? "opportunity" : "opportunities"} found
+            {sortedJobs.length}{" "}
+            {sortedJobs.length === 1 ? "opportunity" : "opportunities"} found
           </p>
 
           <div className="job-grid">
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => (
+            {sortedJobs.length > 0 ? (
+              sortedJobs.map((job) => (
                 <article className="job-card" key={job.id}>
                   <div className="job-card-top">
                     <div className={`company-logo ${job.color}`}>
