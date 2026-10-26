@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import jobs from "./data/jobs";
+import JobsPage from "./pages/JobsPage";
 
 function HomePage() {
   const [query, setQuery] = useState("");
@@ -395,6 +396,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/jobs" element={<JobsPage />} />
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
