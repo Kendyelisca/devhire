@@ -5,6 +5,7 @@ import jobs from "../data/jobs";
 
 function JobsPage() {
   const [query, setQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("All");
   const navigate = useNavigate();
 
   const filteredJobs = jobs.filter((job) => {
@@ -20,7 +21,15 @@ function JobsPage() {
       .join(" ")
       .toLowerCase();
 
-    return searchTerms.every((term) => searchableText.includes(term));
+    const matchesSearch = searchTerms.every((term) =>
+      searchableText.includes(term),
+    );
+
+    const matchesType =
+      selectedType === "All" ||
+      job.location.toLowerCase().includes(selectedType.toLowerCase());
+
+    return matchesSearch && matchesType;
   });
 
   return (
@@ -87,6 +96,21 @@ function JobsPage() {
               </button>
             )}
           </form>
+          <div className="job-filters" aria-label="Filter jobs by work type">
+            {["All", "Remote", "Hybrid", "On-site"].map((type) => (
+              <button
+                key={type}
+                type="button"
+                className={`filter-button ${
+                  selectedType === type ? "active" : ""
+                }`}
+                aria-pressed={selectedType === type}
+                onClick={() => setSelectedType(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
 
           <p className="search-summary" aria-live="polite">
             {filteredJobs.length}{" "}

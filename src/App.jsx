@@ -1,6 +1,12 @@
 import { useState } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Link,
+} from "react-router-dom";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import jobs from "./data/jobs";
 import JobsPage from "./pages/JobsPage";
@@ -265,8 +271,9 @@ function HomePage() {
               </p>
             </div>
 
-            <a
+            <Link
               className="view-all"
+              to="/jobs"
               href="#home"
               onClick={() => {
                 setQuery("");
@@ -274,7 +281,7 @@ function HomePage() {
               }}
             >
               Explore opportunities <span>→</span>
-            </a>
+            </Link>
           </div>
 
           {query.trim() && (

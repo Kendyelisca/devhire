@@ -978,3 +978,33 @@ p {
     transform: translateY(0);
   }
 }
+
+.job-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.filter-button {
+  padding: 10px 18px;
+  border: 1px solid #dbe2ea;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.filter-button:hover {
+  border-color: #7c83ff;
+}
+
+.filter-button.active {
+  background: #252b52;
+  border-color: #252b52;
+  color: white;
+}
