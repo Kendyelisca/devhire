@@ -65,12 +65,9 @@ export default function JobDetailsPage() {
           are not open through DevHire yet.
         </p>
 
-        <button
-          className="apply-button"
-          onClick={() => alert("Applications are coming soon to DevHire!")}
-        >
-          Apply soon ↗
-        </button>
+        <Link to={`/jobs/${job.id}/apply`} className="apply-button">
+          Apply now ↗
+        </Link>
       </section>
     </main>
   );

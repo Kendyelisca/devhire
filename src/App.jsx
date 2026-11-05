@@ -10,6 +10,8 @@ import {
 import JobDetailsPage from "./pages/JobDetailsPage";
 import jobs from "./data/jobs";
 import JobsPage from "./pages/JobsPage";
+import ApplyPage from "./pages/ApplyPage";
+import ApplicationsPage from "./pages/ApplicationsPage";
 
 function HomePage() {
   const [query, setQuery] = useState("");
@@ -74,6 +76,7 @@ function HomePage() {
           <a href="#jobs">Find jobs</a>
           <a href="#how-it-works">How it works</a>
           <a href="#companies">For companies</a>
+          <Link to="/applications">My Applications</Link>
         </nav>
 
         <div className="nav-actions">
@@ -405,6 +408,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
+        <Route path="/jobs/:id/apply" element={<ApplyPage />} />
+        <Route path="/applications" element={<ApplicationsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

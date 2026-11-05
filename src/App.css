@@ -1087,3 +1087,320 @@ p {
   color: #252b52;
   border-bottom-color: #7c83ff;
 }
+
+/* =================================
+   DEVHIRE APPLICATION FORM
+================================= */
+
+.job-details-page {
+  width: min(850px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 30px 0 80px;
+}
+
+.job-details-page .job-details {
+  margin-top: 15px;
+  padding: 38px;
+  border: 1px solid #34344e;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #151a2b, #10131e);
+  box-shadow: 0 25px 70px #00000035;
+}
+
+.back-link {
+  display: block;
+  width: fit-content;
+  margin-bottom: 30px;
+  color: #aaa8ff;
+  font-size: 12px;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--cyan);
+}
+
+.job-details .section-kicker {
+  margin-bottom: 14px;
+}
+
+.job-details h1 {
+  margin-bottom: 12px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(28px, 4vw, 38px);
+  letter-spacing: -1.5px;
+}
+
+.job-details .company-name {
+  margin-bottom: 30px;
+  color: #a0a6ba;
+  font-size: 13px;
+}
+
+/* Form layout */
+
+.application-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.application-form label {
+  margin-top: 10px;
+  color: #dce0f0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.application-form input,
+.application-form select,
+.application-form textarea {
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid #30364b;
+  border-radius: 9px;
+  outline: none;
+  color: #f3f5ff;
+  background: #0d1120;
+  font: inherit;
+  font-size: 13px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.application-form input::placeholder,
+.application-form textarea::placeholder {
+  color: #737b92;
+}
+
+.application-form input:focus,
+.application-form select:focus,
+.application-form textarea:focus {
+  border-color: #7775ff;
+  box-shadow: 0 0 0 3px #7775ff1c;
+}
+
+.application-form select {
+  cursor: pointer;
+}
+
+.application-form select option {
+  color: white;
+  background: #111522;
+}
+
+.application-form textarea {
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+/* CV upload */
+
+.application-form input[type="file"] {
+  padding: 12px;
+  color: #aab0c4;
+  cursor: pointer;
+}
+
+.application-form input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 9px 13px;
+  border: 1px solid #5551a0;
+  border-radius: 6px;
+  color: #c4c1ff;
+  background: #7775ff1c;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Submit button - application form only */
+
+.application-form .apply-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  margin-top: 18px;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 9px;
+  color: white;
+  background: linear-gradient(115deg, #7775ff, #6561e8);
+  box-shadow: 0 8px 25px #706aff25;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+
+.application-form .apply-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(115deg, #8987ff, #7772ff);
+}
+
+.job-details .demo-note {
+  margin-top: 22px;
+  padding-top: 17px;
+  border-top: 1px solid #ffffff0c;
+  color: #858ba0;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 650px) {
+  .job-details-page {
+    width: calc(100% - 28px);
+    padding-top: 20px;
+  }
+
+  .job-details-page .job-details {
+    padding: 23px 18px;
+  }
+
+  .job-details h1 {
+    font-size: 28px;
+  }
+
+  .application-form {
+    gap: 10px;
+  }
+
+  .application-form input,
+  .application-form select,
+  .application-form textarea {
+    font-size: 12px;
+  }
+}
+
+/* =================================
+   DEVHIRE APPLICATIONS DASHBOARD
+================================= */
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 32px;
+}
+
+.application-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 23px;
+  border: 1px solid #30364b;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #171b2d, #111522);
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.application-card:hover {
+  transform: translateY(-2px);
+  border-color: #7775ff80;
+}
+
+.application-card h2 {
+  margin-bottom: 9px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+.application-card .company-name {
+  margin-bottom: 15px;
+}
+
+.application-card > div > p:not(.company-name) {
+  margin-bottom: 7px;
+  color: #9299ad;
+  font-size: 11px;
+}
+
+.application-status {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border: 1px solid #7775ff55;
+  border-radius: 7px;
+  color: #aaa8ff;
+  background: #7775ff15;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Empty applications state */
+
+.applications-empty {
+  margin-top: 35px;
+  padding: 45px 25px;
+  border: 1px dashed #393e58;
+  border-radius: 13px;
+  background: #ffffff03;
+  text-align: center;
+}
+
+.applications-empty h2 {
+  margin-bottom: 12px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 23px;
+}
+
+.applications-empty p {
+  max-width: 400px;
+  margin: 0 auto 25px;
+  color: #9299ad;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.applications-empty .apply-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 9px;
+  color: white;
+  background: linear-gradient(115deg, #7775ff, #6561e8);
+  font-size: 12px;
+  font-weight: 600;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+
+.applications-empty .apply-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(115deg, #8987ff, #7772ff);
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 650px) {
+  .application-card {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .application-card h2 {
+    font-size: 16px;
+  }
+
+  .applications-empty {
+    padding: 35px 18px;
+  }
+}
