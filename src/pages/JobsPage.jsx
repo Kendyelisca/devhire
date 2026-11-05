@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 import jobs from "../data/jobs";
@@ -7,10 +7,27 @@ function JobsPage() {
   const [query, setQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedEmployment, setSelectedEmployment] = useState("All");
-  const [sortBy, setSortBy] = useState("recommended");
   const navigate = useNavigate();
+  const [sortBy, setSortBy] = useState("recommended");
+  const [activeTab, setActiveTab] = useState("all");
+  const [savedJobs, setSavedJobs] = useState(() => {
+    const storedJobs = localStorage.getItem("devhire-saved-jobs");
+    return storedJobs ? JSON.parse(storedJobs) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem("devhire-saved-jobs", JSON.stringify(savedJobs));
+  }, [savedJobs]);
+
+  const toggleSaveJob = (jobId) => {
+    setSavedJobs((currentSavedJobs) =>
+      currentSavedJobs.includes(jobId)
+        ? currentSavedJobs.filter((id) => id !== jobId)
+        : [...currentSavedJobs, jobId],
+    );
+  };
 
   const filteredJobs = jobs.filter((job) => {
+    const matchesTab = activeTab === "all" || savedJobs.includes(job.id);
     const searchTerms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
 
     const searchableText = [
@@ -35,7 +52,7 @@ function JobsPage() {
       selectedEmployment === "All" ||
       job.type.toLowerCase() === selectedEmployment.toLowerCase();
 
-    return matchesSearch && matchesType && matchesEmployment;
+    return matchesSearch && matchesType && matchesEmployment && matchesTab;
   });
 
   const sortedJobs = [...filteredJobs].sort((a, b) => {
@@ -155,6 +172,24 @@ function JobsPage() {
             ))}
           </div>
 
+          <div className="job-tabs">
+            <button
+              type="button"
+              className={activeTab === "all" ? "active" : ""}
+              onClick={() => setActiveTab("all")}
+            >
+              All Jobs
+            </button>
+
+            <button
+              type="button"
+              className={activeTab === "saved" ? "active" : ""}
+              onClick={() => setActiveTab("saved")}
+            >
+              Saved Jobs ({savedJobs.length})
+            </button>
+          </div>
+
           <div className="sort-control">
             <label htmlFor="sortBy">Sort by:</label>
 
@@ -182,7 +217,31 @@ function JobsPage() {
                     <div className={`company-logo ${job.color}`}>
                       {job.initials}
                     </div>
-                    <span className="job-type">{job.type}</span>
+
+                    <div className="job-card-actions">
+                      <span className="job-type">{job.type}</span>
+
+                      <button
+                        type="button"
+                        className={`save-job-button ${
+                          savedJobs.includes(job.id) ? "saved" : ""
+                        }`}
+                        onClick={() => toggleSaveJob(job.id)}
+                        aria-label={
+                          savedJobs.includes(job.id)
+                            ? "Remove saved job"
+                            : "Save job"
+                        }
+                        aria-pressed={savedJobs.includes(job.id)}
+                        title={
+                          savedJobs.includes(job.id)
+                            ? "Remove saved job"
+                            : "Save job"
+                        }
+                      >
+                        {savedJobs.includes(job.id) ? "♥" : "♡"}
+                      </button>
+                    </div>
                   </div>
 
                   <h3>{job.role}</h3>
@@ -211,7 +270,11 @@ function JobsPage() {
               ))
             ) : (
               <p className="no-results">
-                No matching jobs yet. Try a different keyword.
+                {activeTab === "saved" && savedJobs.length === 0
+                  ? "You haven't saved any jobs yet. Click the heart on a job to save it!"
+                  : activeTab === "saved"
+                    ? "No saved jobs match your current search or filters."
+                    : "No matching jobs yet. Try a different keyword."}
               </p>
             )}
           </div>
