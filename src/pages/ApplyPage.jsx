@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import jobs from "../data/jobs";
+import { getJobs } from "../utils/jobStorage";
+import { saveCV } from "../utils/cvStorage";
 import "../App.css";
 
 export default function ApplyPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const jobs = getJobs();
 
   const job = jobs.find((item) => item.id === id);
 
@@ -17,6 +19,7 @@ export default function ApplyPage() {
   });
 
   const [cv, setCv] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!job) {
     return (
@@ -34,7 +37,7 @@ export default function ApplyPage() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!cv) {
@@ -42,27 +45,50 @@ export default function ApplyPage() {
       return;
     }
 
+    if (cv.size > 5 * 1024 * 1024) {
+      alert("Your CV must be 5 MB or smaller.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const applicationId = crypto.randomUUID();
+
     const application = {
-      id: crypto.randomUUID(),
+      id: applicationId,
       jobId: job.id,
       jobRole: job.role,
       company: job.company,
       ...formData,
       cvName: cv.name,
+      cvStored: true,
       status: "Submitted",
       appliedAt: new Date().toISOString(),
     };
 
-    const existingApplications = JSON.parse(
-      localStorage.getItem("devhire-applications") || "[]",
-    );
+    try {
+      await saveCV(applicationId, cv);
 
-    localStorage.setItem(
-      "devhire-applications",
-      JSON.stringify([...existingApplications, application]),
-    );
+      const storedApplications = JSON.parse(
+        localStorage.getItem("devhire-applications") || "[]",
+      );
 
-    navigate("/applications");
+      const existingApplications = Array.isArray(storedApplications)
+        ? storedApplications
+        : [];
+
+      localStorage.setItem(
+        "devhire-applications",
+        JSON.stringify([...existingApplications, application]),
+      );
+
+      navigate("/applications");
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      alert("We couldn't save your CV. Please try again with a smaller file.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -117,7 +143,9 @@ export default function ApplyPage() {
             <option value="5+ years">5+ years</option>
           </select>
 
-          <label htmlFor="cv">Upload your CV</label>
+          <label htmlFor="cv">
+            Upload your CV (PDF, DOC or DOCX · Max 5 MB)
+          </label>
           <input
             id="cv"
             type="file"
@@ -136,14 +164,18 @@ export default function ApplyPage() {
             rows="6"
           />
 
-          <button className="apply-button" type="submit">
-            Submit application ↗
+          <button
+            className="apply-button"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Submit application ↗"}
           </button>
         </form>
 
         <p className="demo-note">
-          Demo application only. Your submission is stored locally in this
-          browser and is not sent to the employer.
+          Demo application only. Your application and CV are stored locally in
+          this browser and are not sent to an external employer.
         </p>
       </section>
     </main>

@@ -7,11 +7,15 @@ import {
   useNavigate,
   Link,
 } from "react-router-dom";
+import CreateJobPage from "./pages/employer/CreateJobPage";
 import JobDetailsPage from "./pages/JobDetailsPage";
+import EmployerApplicationsPage from "./pages/employer/EmployerApplicationsPage";
 import jobs from "./data/jobs";
 import JobsPage from "./pages/JobsPage";
 import ApplyPage from "./pages/ApplyPage";
+import ManageJobsPage from "./pages/employer/ManageJobsPage";
 import ApplicationsPage from "./pages/ApplicationsPage";
+import EmployerDashboard from "./pages/employer/EmployerDashboard";
 
 function HomePage() {
   const [query, setQuery] = useState("");
@@ -410,6 +414,13 @@ function App() {
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
         <Route path="/jobs/:id/apply" element={<ApplyPage />} />
         <Route path="/applications" element={<ApplicationsPage />} />
+        <Route path="/employer" element={<EmployerDashboard />} />
+        <Route path="/employer/jobs/new" element={<CreateJobPage />} />
+        <Route path="/employer/jobs" element={<ManageJobsPage />} />
+        <Route
+          path="/employer/applications"
+          element={<EmployerApplicationsPage />}
+        />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

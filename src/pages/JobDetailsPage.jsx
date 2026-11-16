@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import jobs from "../data/jobs";
+import { getJobs } from "../utils/jobStorage";
 
 export default function JobDetailsPage() {
   const { id } = useParams();
+  const jobs = getJobs();
   const job = jobs.find((item) => item.id === id);
 
   if (!job) {

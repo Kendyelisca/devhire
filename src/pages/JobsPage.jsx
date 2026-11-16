@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
-import jobs from "../data/jobs";
+import { getJobs } from "../utils/jobStorage";
 
 function JobsPage() {
   const [query, setQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedEmployment, setSelectedEmployment] = useState("All");
   const navigate = useNavigate();
+  const jobs = getJobs();
   const [sortBy, setSortBy] = useState("recommended");
   const [activeTab, setActiveTab] = useState("all");
   const [savedJobs, setSavedJobs] = useState(() => {
