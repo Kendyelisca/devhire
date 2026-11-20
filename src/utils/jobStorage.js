@@ -37,12 +37,25 @@ export function createJob(jobData) {
   return newJob;
 }
 
-export function deleteJob(jobId) {
+export function deleteJob(jobId, employerId) {
   const currentJobs = getJobs();
+
+  const jobToDelete = currentJobs.find(
+    (job) =>
+      job.id === jobId &&
+      job.isEmployerCreated &&
+      job.employerId === employerId,
+  );
+
+  if (!jobToDelete) {
+    return false;
+  }
 
   const updatedJobs = currentJobs.filter((job) => job.id !== jobId);
 
   const employerJobs = updatedJobs.filter((job) => job.isEmployerCreated);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(employerJobs));
+
+  return true;
 }

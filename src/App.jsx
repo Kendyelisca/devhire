@@ -1,12 +1,5 @@
 import { useState } from "react";
 import "./App.css";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-  Link,
-} from "react-router-dom";
 import CreateJobPage from "./pages/employer/CreateJobPage";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import EmployerApplicationsPage from "./pages/employer/EmployerApplicationsPage";
@@ -16,6 +9,18 @@ import ApplyPage from "./pages/ApplyPage";
 import ManageJobsPage from "./pages/employer/ManageJobsPage";
 import ApplicationsPage from "./pages/ApplicationsPage";
 import EmployerDashboard from "./pages/employer/EmployerDashboard";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Link,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 
 function HomePage() {
   const [query, setQuery] = useState("");
@@ -84,16 +89,13 @@ function HomePage() {
         </nav>
 
         <div className="nav-actions">
-          <button
-            className="btn btn-ghost"
-            onClick={() => setMessage("Developer sign-in is coming soon!")}
-          >
+          <button className="btn btn-ghost" onClick={() => navigate("/login")}>
             Log in
           </button>
 
           <button
             className="btn btn-primary nav-cta"
-            onClick={() => setMessage("Account creation is coming soon!")}
+            onClick={() => navigate("/register")}
           >
             Get started <span aria-hidden="true">↗</span>
           </button>
@@ -408,21 +410,42 @@ function HomePage() {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/jobs" element={<JobsPage />} />
-        <Route path="/jobs/:id" element={<JobDetailsPage />} />
-        <Route path="/jobs/:id/apply" element={<ApplyPage />} />
-        <Route path="/applications" element={<ApplicationsPage />} />
-        <Route path="/employer" element={<EmployerDashboard />} />
-        <Route path="/employer/jobs/new" element={<CreateJobPage />} />
-        <Route path="/employer/jobs" element={<ManageJobsPage />} />
-        <Route
-          path="/employer/applications"
-          element={<EmployerApplicationsPage />}
-        />
-        <Route path="*" element={<HomePage />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          {/* Public pages */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/jobs/:id" element={<JobDetailsPage />} />
+
+          {/* Authentication */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/register"
+            element={<Navigate to="/register/candidate" replace />}
+          />
+          <Route path="/register/:role" element={<RegisterPage />} />
+
+          {/* Candidate-only pages */}
+          <Route element={<ProtectedRoute allowedRole="candidate" />}>
+            <Route path="/jobs/:id/apply" element={<ApplyPage />} />
+            <Route path="/applications" element={<ApplicationsPage />} />
+          </Route>
+
+          {/* Employer-only pages */}
+          <Route element={<ProtectedRoute allowedRole="employer" />}>
+            <Route path="/employer" element={<EmployerDashboard />} />
+            <Route path="/employer/jobs/new" element={<CreateJobPage />} />
+            <Route path="/employer/jobs" element={<ManageJobsPage />} />
+            <Route
+              path="/employer/applications"
+              element={<EmployerApplicationsPage />}
+            />
+          </Route>
+
+          {/* Fallback */}
+          <Route path="*" element={<HomePage />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

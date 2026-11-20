@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getJobs } from "../../utils/jobStorage";
+import { useAuth } from "../../context/AuthContext";
 import "../../App.css";
 import { getCV } from "../../utils/cvStorage";
 
@@ -18,7 +19,12 @@ function getStoredApplications() {
 }
 
 export default function EmployerApplicationsPage() {
-  const employerJobs = getJobs().filter((job) => job.isEmployerCreated);
+  const { user } = useAuth();
+
+  const employerJobs = getJobs().filter(
+    (job) => job.isEmployerCreated && job.employerId === user.id,
+  );
+
   const employerJobIds = new Set(employerJobs.map((job) => job.id));
 
   const [applications, setApplications] = useState(() =>
@@ -34,8 +40,16 @@ export default function EmployerApplicationsPage() {
   const handleStatusChange = (applicationId, newStatus) => {
     const allApplications = getStoredApplications();
 
+    const belongsToEmployer = allApplications.some(
+      (application) =>
+        application.id === applicationId &&
+        employerJobIds.has(application.jobId),
+    );
+
+    if (!belongsToEmployer) return;
+
     const updatedApplications = allApplications.map((application) =>
-      application.id === applicationId
+      application.id === applicationId && employerJobIds.has(application.jobId)
         ? { ...application, status: newStatus }
         : application,
     );

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../App.css";
 import { createJob } from "../../utils/jobStorage";
+import { useAuth } from "../../context/AuthContext";
 
 export default function CreateJobPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     company: "",
@@ -46,6 +48,7 @@ export default function CreateJobPage() {
 
     const newJob = {
       ...formData,
+      employerId: user.id,
       initials: formData.company.trim().charAt(0).toUpperCase(),
       color: "purple",
       tags: formData.tags

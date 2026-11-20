@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
 import { getJobs } from "../../utils/jobStorage";
+import { useAuth } from "../../context/AuthContext";
 import "../../App.css";
 
 export default function EmployerDashboard() {
-  const employerJobs = getJobs().filter((job) => job.isEmployerCreated);
+  const { user } = useAuth();
+
+  const employerJobs = getJobs().filter(
+    (job) => job.isEmployerCreated && job.employerId === user.id,
+  );
 
   let applications = [];
 
@@ -77,7 +82,7 @@ export default function EmployerDashboard() {
       <section className="employer-welcome">
         <div>
           <span className="section-kicker">EMPLOYER OVERVIEW</span>
-          <h1>Welcome back, Employer.</h1>
+          <h1>Welcome back, {user.name}.</h1>
           <p>Manage your developer vacancies and discover talented people.</p>
         </div>
 

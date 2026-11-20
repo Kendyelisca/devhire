@@ -2,10 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../App.css";
 import { getJobs, deleteJob } from "../../utils/jobStorage";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ManageJobsPage() {
+  const { user } = useAuth();
+
   const [jobs, setJobs] = useState(() =>
-    getJobs().filter((job) => job.isEmployerCreated),
+    getJobs().filter(
+      (job) => job.isEmployerCreated && job.employerId === user.id,
+    ),
   );
 
   const handleDelete = (jobId) => {
@@ -15,7 +20,7 @@ export default function ManageJobsPage() {
 
     if (!confirmed) return;
 
-    deleteJob(jobId);
+    deleteJob(jobId, user.id);
 
     setJobs((currentJobs) => currentJobs.filter((job) => job.id !== jobId));
   };
